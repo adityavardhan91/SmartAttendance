@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Attendance</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .present {
+            background-color: green !important;
+        }
+
+        .absent {
+            background-color: red !important;
+        }
+
+        tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5 d-flex justify-content-center">
+    <div>
+        <h2>Student Attendance Table</h2>
+
+        <!-- Date and Class Input Fields -->
+        <div class="mb-3">
+            <label for="inputDate" class="form-label">Date:</label>
+            <input type="date" class="form-control" id="inputDate">
+        </div>
+        <div class="mb-3">
+            <label for="inputClass" class="form-label">Class:</label>
+            <input type="text" class="form-control" id="inputClass">
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Registration Number</th>
+                    <th>Student Name</th>
+                    <th>Present</th>
+                    <th>Absent</th>
+                </tr>
+            </thead>
+            <tbody id="attendanceTableBody">
+                <!-- Data will be inserted here using JavaScript -->
+            </tbody>
+        </table>
+
+        <!-- Submit Button -->
+        <button class="btn btn-primary" onclick="submitAttendance()">Submit Attendance</button>
+    </div>
+</div>
+
+<!-- Bootstrap JS and Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Sample data (you can replace it with your actual data)
+    var studentData = [
+        { regNumber: "218790701001", name: "K Sowmya", present: false, absent: false },
+        { regNumber: "218790701002", name: "T Sateesh", present: false, absent: false },
+        { regNumber: "218790701003", name: "M Srinivas", present: false, absent: false },
+        { regNumber: "218790701004", name: "P Padmawathi", present: false, absent: false },
+        { regNumber: "218790701005", name: "S Sudha", present: false, absent: false },
+        { regNumber: "218790701006", name: "P Ganesh", present: false, absent: false }
+        // Add more data as needed
+    ];
+
+    // Function to populate the table with data
+    function populateTable() {
+        var tableBody = document.getElementById("attendanceTableBody");
+
+        // Clear existing rows
+        tableBody.innerHTML = '';
+
+        // Loop through the data and create table rows
+        studentData.forEach(function(student) {
+            var row = tableBody.insertRow();
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+
+            cell1.textContent = student.regNumber;
+            cell2.textContent = student.name;
+
+            // Radio buttons for Present column
+            var presentRadio = document.createElement("input");
+            presentRadio.type = "radio";
+            presentRadio.name = "attendance_" + student.regNumber;
+            presentRadio.onclick = function() {
+                row.className = 'present';
+            };
+            cell3.appendChild(presentRadio);
+
+            // Radio buttons for Absent column
+            var absentRadio = document.createElement("input");
+            absentRadio.type = "radio";
+            absentRadio.name = "attendance_" + student.regNumber;
+            absentRadio.onclick = function() {
+                row.className = 'absent';
+            };
+            cell4.appendChild(absentRadio);
+        });
+    }
+
+    // Function to submit attendance (you can customize this function as needed)
+    function submitAttendance() {
+        // Example: Collecting attendance data and logging it to the console
+        var attendanceData = [];
+        studentData.forEach(function(student) {
+            var row = document.querySelector('.present[data-regnumber="' + student.regNumber + '"]') ||
+                      document.querySelector('.absent[data-regnumber="' + student.regNumber + '"]');
+
+            var attendance = {
+                regNumber: student.regNumber,
+                name: student.name,
+                status: row ? row.classList.contains('present') ? 'Present' : 'Absent' : 'Not Marked'
+            };
+
+            attendanceData.push(attendance);
+        });
+
+        // Example: Logging attendance data to the console (you can send it to the server)
+        console.log("Attendance Data:", attendanceData);
+    }
+
+    // Call the function to populate the table on page load
+    populateTable();
+</script>
+
+</body>
+</html>
